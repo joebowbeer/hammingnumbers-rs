@@ -8,7 +8,7 @@ fn main() {
     let n: usize = args()
         .nth(1)
         .and_then(|a| a.parse().ok())
-        .expect("error: length required");
+        .expect("error: limit required");
     println!("{:?}", hamming_iter().take(n).collect::<Vec<_>>());
 }
 
@@ -18,11 +18,14 @@ fn hamming_iter() -> impl Iterator<Item = usize> {
 
     iter::from_fn(move || {
         let Reverse(i) = q.pop().unwrap();
-        while let Some(Reverse(p)) = q.peek() {
-            if *p != i {
-                break;
+        // remove dups
+        loop {
+            match q.peek() {
+                Some(Reverse(p)) if *p == i => {
+                    q.pop();
+                }
+                _ => break,
             }
-            q.pop();
         }
         q.push(Reverse(2 * i));
         q.push(Reverse(3 * i));
