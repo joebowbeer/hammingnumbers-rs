@@ -21,11 +21,9 @@ fn hamming_iter() -> impl Iterator<Item = usize> {
         // remove dups
         loop {
             match q.peek() {
-                Some(Reverse(p)) if *p == i => {
-                    q.pop();
-                }
+                Some(Reverse(p)) if *p == i => q.pop(),
                 _ => break,
-            }
+            };
         }
         q.push(Reverse(2 * i));
         q.push(Reverse(3 * i));
